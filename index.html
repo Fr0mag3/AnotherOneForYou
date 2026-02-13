@@ -346,6 +346,37 @@ button:hover{
   }
 }
 
+/* MOBILE FIX FOR PAGE 4 (circles + open letter) */
+@media (max-width:600px){
+  #p4{
+    padding-top:60px;
+    justify-content:flex-start;
+  }
+
+  #p4 h1{
+    font-size:clamp(24px,7vw,34px);
+    margin-bottom:25px;
+    text-align:center;
+  }
+
+  .circle-container{
+    transform:scale(.75);
+    margin-top:-40px;
+  }
+
+  #openLetter{
+    position:fixed;
+    bottom:25px;
+    left:50%;
+    transform:translateX(-50%);
+    width:85%;
+    max-width:320px;
+    padding:14px;
+    font-size:18px;
+    z-index:999;
+  }
+}
+
 </style>
 </head>
 
