@@ -14,7 +14,8 @@
 
 body{
   font-family:'Inter',sans-serif;
-  overflow:hidden;
+  overflow-x:hidden;
+  overflow-y:auto;
   background:#020202;
   color:white;
 }
@@ -80,6 +81,8 @@ canvas{
   position:fixed;
   inset:0;
   min-height:100vh;
+  padding:80px 20px;
+  height:auto;
   z-index:5;
 
   display:flex;
@@ -376,7 +379,25 @@ button:hover{
     z-index:999;
   }
 }
+  @media (max-width:600px){
 
+  .circle-container{
+    flex-direction:column;
+    gap:35px;
+    padding:40px 0 120px;
+  }
+
+  .circle{
+    width:180px;
+    height:180px;
+  }
+
+  #p4 h1{
+    font-size:28px;
+    margin-top:20px;
+  }
+
+}
 </style>
 </head>
 
@@ -549,3 +570,4 @@ document.addEventListener('click',e=>{
 </script>
 </body>
 </html>
+
