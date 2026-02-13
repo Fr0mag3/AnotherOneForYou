@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>God Tier Cinema Valentine</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;800&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+  font-family:'Inter',sans-serif;
+  overflow:hidden;
+  background:#020202;
+  color:white;
+}
+
+/* CURTAIN */
+
+.curtain{
+  position:fixed;
+  inset:0;
+  z-index:9999;
+  display:flex;
+}
+
+.curtain.open{
+  pointer-events:none;
+}
+
+.panel{
+  flex:1;
+  background:linear-gradient(90deg,#000,#111);
+  transition:transform 1.8s cubic-bezier(.77,0,.18,1);
+}
+
+.curtain.open .panel:first-child{
+  transform:translateX(-100%);
+}
+
+.curtain.open .panel:last-child{
+  transform:translateX(100%);
+}
+
+/* BACKGROUND */
+
+.bg{
+  position:fixed;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(255,215,120,.25), transparent 40%),
+    radial-gradient(circle at 80% 70%, rgba(255,190,80,.18), transparent 40%),
+    linear-gradient(140deg,#020202,#0b0b0b,#020202);
+  transition:2s;
+}
+
+/* ⭐ WORLD DARKENS */
+
+.bg.final{
+  animation:worldFade 6s ease forwards;
+}
+
+@keyframes worldFade{
+  from{filter:brightness(1.8)}
+  to{filter:brightness(.35)}
+}
+
+/* PARTICLES */
+
+canvas{
+  position:fixed;
+  inset:0;
+  z-index:1;
+  pointer-events:none;
+}
+
+/* PAGE */
+
+.page{
+  position:fixed;
+  inset:0;
+  min-height:100vh;
+  z-index:5;
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+  gap:42px;
+
+  visibility:hidden;
+  opacity:0;
+  pointer-events:none;
+
+  transform:scale(1.1);
+  transition:1.2s cubic-bezier(.16,.84,.44,1);
+}
+
+.page.active{
+  visibility:visible;
+  opacity:1;
+  pointer-events:auto;
+  transform:scale(1);
+}
+
+.page.zoomOut{
+  animation:camera .9s forwards;
+}
+
+@keyframes camera{
+  from{transform:scale(1);opacity:1}
+  to{transform:scale(1.35);opacity:0}
+}
+
+/* TITLES */
+
+.title{
+  font-family:'Playfair Display';
+  font-size:clamp(48px,6vw,92px);
+  letter-spacing:6px;
+
+  background:linear-gradient(90deg,#fff,#ffe08a,#fff);
+  -webkit-background-clip:text;
+  color:transparent;
+
+  text-shadow:0 0 120px rgba(255,215,120,.6);
+}
+
+/* CARD */
+
+.card{
+  width:540px;
+  max-width:90%;
+  padding:75px;
+  border-radius:36px;
+  background:linear-gradient(145deg, rgba(255,255,255,.08), rgba(255,255,255,.02));
+  backdrop-filter:blur(60px);
+  border:1px solid rgba(255,255,255,.18);
+  text-align:center;
+}
+
+/* BUTTONS */
+
+button{
+  border:none;
+  padding:16px 36px;
+  border-radius:999px;
+  font-size:17px;
+  cursor:pointer;
+  background:linear-gradient(90deg,#ffe08a,#ffd24a);
+  color:black;
+  font-weight:800;
+  margin:8px;
+  transition:.25s;
+}
+
+button:hover{
+  transform:scale(1.15);
+  box-shadow:0 25px 70px rgba(255,215,120,.8);
+}
+
+.noBtn{
+  background:rgba(255,255,255,.12);
+  color:white;
+}
+
+/* ORBS */
+
+.orbWrap{
+  display:flex;
+  gap:60px;
+  flex-wrap:wrap;
+  justify-content:center;
+}
+
+.orb{
+  width:180px;
+  height:180px;
+  border-radius:50%;
+  background:radial-gradient(circle at 30% 30%, #fff7, #ffd24a55);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:700;
+  cursor:pointer;
+  transition:.4s;
+}
+
+.orb.selected{
+  transform:scale(1.35);
+  box-shadow:
+    0 0 40px rgba(255,215,120,.8),
+    0 0 80px rgba(255,215,120,.7),
+    0 0 140px rgba(255,215,120,.6);
+}
+
+/* LETTER */
+
+.envelope{
+  width:340px;
+  height:220px;
+  background:linear-gradient(145deg,#fff,#f0f0f0);
+  border-radius:16px;
+  cursor:pointer;
+  position:relative;
+}
+
+.envelope:before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(135deg,#ffd24a,#fff0b3);
+  clip-path:polygon(0 0,100% 0,50% 60%);
+  transform-origin:top;
+  transition:1s;
+}
+
+.envelope.open:before{
+  transform:rotateX(180deg);
+}
+
+.letter{
+  display:none;
+  width:520px;
+  max-width:90%;
+  padding:50px;
+  border-radius:22px;
+  background:white;
+  color:black;
+  font-family:'Playfair Display';
+  text-align:center;
+}
+
+/* ⭐ INSANE FINALE TEXT */
+
+.end{
+  font-size:clamp(75px,11vw,180px);
+  font-family:'Playfair Display';
+  letter-spacing:10px;
+  font-weight:800;
+
+  background:linear-gradient(130deg,#ffffff,#fff4c2,#ffd24a,#fff4c2,#ffffff);
+  background-size:400% 400%;
+  -webkit-background-clip:text;
+  color:transparent;
+
+  animation:
+    divineEntrance 2.5s cubic-bezier(.16,.84,.44,1) forwards,
+    goldRiver 10s ease infinite,
+    heartbeatGlow 2s ease-in-out infinite alternate,
+    grandFloat 5s ease-in-out infinite;
+}
+
+@keyframes divineEntrance{
+  0%{transform:scale(.3);opacity:0;filter:blur(18px);}
+  60%{transform:scale(1.08);filter:blur(0);}
+  100%{transform:scale(1);opacity:1;}
+}
+
+@keyframes goldRiver{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+
+@keyframes heartbeatGlow{
+  from{
+    text-shadow:
+      0 0 25px rgba(255,215,120,.5),
+      0 0 60px rgba(255,215,120,.4),
+      0 0 120px rgba(255,215,120,.25);
+  }
+  to{
+    text-shadow:
+      0 0 40px rgba(255,230,160,1),
+      0 0 100px rgba(255,215,120,1),
+      0 0 200px rgba(255,215,120,.9);
+  }
+}
+
+@keyframes grandFloat{
+  from{transform:translateY(0)}
+  to{transform:translateY(-22px)}
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="curtain" id="curtain">
+  <div class="panel"></div>
+  <div class="panel"></div>
+</div>
+
+<div class="bg" id="bg"></div>
+<canvas id="particles"></canvas>
+
+<div class="page" id="p1">
+  <div class="title">For You</div>
+  <div class="card">
+    <h2>Will you be my Valentine?</h2>
+    <button onclick="next('p2')">Yes</button>
+    <button class="noBtn" onclick="dodge(this)">No</button>
+  </div>
+</div>
+
+<div class="page" id="p2">
+  <div class="title">Entering Your Universe</div>
+  <button onclick="next('p3')">Continue</button>
+</div>
+
+<div class="page" id="p3">
+  <div class="title">Pick Your Future</div>
+  <div class="orbWrap">
+    <div class="orb" onclick="selectOrb(this)">Forever</div>
+    <div class="orb" onclick="selectOrb(this)">Adventure</div>
+    <div class="orb" onclick="selectOrb(this)">Infinity</div>
+  </div>
+  <button onclick="next('p4')">Open Letter</button>
+</div>
+
+<div class="page" id="p4">
+  <div class="title">One Last Thing</div>
+  <div class="envelope" id="env" onclick="openLetter()"></div>
+
+  <div class="letter" id="letter">
+    Out of billions of timelines… this one led to you.<br><br>
+    And honestly? Excellent choice.
+    <br><br>
+    <button onclick="next('p5')">Roll Credits</button>
+  </div>
+</div>
+
+<div class="page" id="p5">
+  <div class="end">I love you &lt;3 💕</div>
+</div>
+
+<script>
+
+/* curtain */
+setTimeout(()=>{
+  document.getElementById('curtain').classList.add('open');
+  setTimeout(()=>{
+    document.getElementById('p1').classList.add('active');
+  },1800);
+},400);
+
+/* particles */
+
+const canvas=document.getElementById('particles');
+const ctx=canvas.getContext('2d');
+
+function resize(){
+  canvas.width=innerWidth;
+  canvas.height=innerHeight;
+}
+resize();
+addEventListener('resize',resize);
+
+let parts=[];
+for(let i=0;i<150;i++){
+  parts.push({
+    x:Math.random()*canvas.width,
+    y:Math.random()*canvas.height,
+    v:Math.random()*0.7
+  });
+}
+
+function animate(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle='rgba(255,215,120,.9)';
+
+  parts.forEach(p=>{
+    p.y+=p.v;
+    if(p.y>canvas.height)p.y=0;
+
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,1.7,0,Math.PI*2);
+    ctx.fill();
+  });
+
+  requestAnimationFrame(animate);
+}
+animate();
+
+/* GOLD BURST */
+
+function createBurst(){
+
+  for(let i=0;i<140;i++){
+
+    const spark=document.createElement('div');
+
+    spark.style.position='fixed';
+    spark.style.left='50%';
+    spark.style.top='50%';
+    spark.style.width='6px';
+    spark.style.height='6px';
+    spark.style.borderRadius='50%';
+    spark.style.background='gold';
+    spark.style.pointerEvents='none';
+    spark.style.zIndex='9999';
+
+    const angle=Math.random()*360;
+    const distance=Math.random()*600+200;
+
+    spark.animate([
+      {transform:`translate(-50%,-50%) rotate(${angle}deg) translateX(0)`,opacity:1},
+      {transform:`translate(-50%,-50%) rotate(${angle}deg) translateX(${distance}px)`,opacity:0}
+    ],{
+      duration:1800,
+      easing:'cubic-bezier(.16,.84,.44,1)'
+    });
+
+    document.body.appendChild(spark);
+    setTimeout(()=>spark.remove(),1800);
+  }
+}
+
+/* navigation */
+
+function next(id){
+  const current=document.querySelector('.page.active');
+  if(!current) return;
+
+  current.classList.add('zoomOut');
+
+  setTimeout(()=>{
+    current.classList.remove('active','zoomOut');
+    document.getElementById(id).classList.add('active');
+
+    if(id==='p5'){
+      document.getElementById('bg').classList.add('final');
+      parts.forEach(p=>p.v*=5);
+      createBurst();
+    }
+
+  },800);
+}
+
+function dodge(btn){
+  btn.style.position='absolute';
+  btn.style.left=Math.random()*70+'%';
+  btn.style.top=Math.random()*70+'%';
+}
+
+function selectOrb(el){
+  document.querySelectorAll('.orb').forEach(o=>o.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function openLetter(){
+  document.getElementById('env').classList.add('open');
+  document.getElementById('letter').style.display='block';
+}
+
+</script>
+
+</body>
+</html>
